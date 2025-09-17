@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+  studentUsers StudentUser[]
+
+  @@map("users")
+}
+
+model Student {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  ra        String   @unique
+  cpf       String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  studentUsers StudentUser[]
+
+  @@map("students")
+  @@index([name])
+  @@index([email])
+  @@index([ra])
+  @@index([cpf])
+}
+
+model StudentUser {
+  id        String   @id @default(cuid())
+  userId    String
+  studentId String
+  action    Action   
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  student Student @relation(fields: [studentId], references: [id])
+
+  @@map("student_users")
+  @@unique([userId, studentId, action])
+}
+
+enum Role {
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum Action {
+  CREATED
+  UPDATED
+  DELETED
+}
