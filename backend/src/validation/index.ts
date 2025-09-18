@@ -1,0 +1,56 @@
+export {
+  studentCreateSchema,
+  studentUpdateSchema,
+  studentFiltersSchema,
+  studentIdSchema,
+  validateStudentCreate,
+  validateStudentUpdate,
+  validateStudentFilters,
+  validateStudentId,
+  type StudentCreateInput,
+  type StudentUpdateInput,
+  type StudentFilters,
+  type StudentIdParams,
+} from './student.validation';
+
+export {
+  userRegisterSchema,
+  userLoginSchema,
+  changePasswordSchema,
+  resetPasswordSchema,
+  tokenSchema,
+  validateUserRegister,
+  validateUserLogin,
+  validateChangePassword,
+  validateResetPassword,
+  validateToken,
+  type UserRegisterInput,
+  type UserLoginInput,
+  type ChangePasswordInput,
+  type ResetPasswordInput,
+  type TokenInput,
+} from './auth.validation';
+
+export {
+  paginationSchema,
+  studentQuerySchema,
+  idParamSchema,
+  healthCheckSchema,
+  apiResponseSchema,
+  validatePagination,
+  validateStudentQuery,
+  validateIdParam,
+  validateHealthCheck,
+  type PaginationParams,
+  type StudentQueryParams,
+  type IdParams,
+  type HealthCheckResponse,
+  type ApiResponse,
+} from './common.validation';
+
+export {
+  validateSchema,
+  validateBody,
+  validateQuery,
+  validateParams,
+} from './middleware.validation';

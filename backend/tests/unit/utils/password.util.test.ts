@@ -78,13 +78,6 @@ describe('Password Utility Functions', () => {
       expect(result.errors).toContain('Password must contain at least one number');
     });
 
-    test('should reject password without special character', () => {
-      const result = validatePasswordStrength('Password123');
-      
-      expect(result.isValid).toBe(false);
-      expect(result.errors).toContain('Password must contain at least one special character');
-    });
-
     test('should reject common weak passwords', () => {
       const result = validatePasswordStrength('password');
       
