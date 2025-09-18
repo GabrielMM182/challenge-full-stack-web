@@ -63,6 +63,14 @@ export const validateToken = (data: unknown) => {
   return tokenSchema.parse(data);
 };
 
+export const validateUserRegisterSafe = (data: unknown) => {
+  return userRegisterSchema.safeParse(data);
+};
+
+export const validateUserLoginSafe = (data: unknown) => {
+  return userLoginSchema.safeParse(data);
+};
+
 export type UserRegisterInput = z.infer<typeof userRegisterSchema>;
 export type UserLoginInput = z.infer<typeof userLoginSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;

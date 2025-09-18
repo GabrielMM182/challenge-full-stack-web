@@ -68,6 +68,14 @@ export const validateStudentId = (data: unknown) => {
   return studentIdSchema.parse(data);
 };
 
+export const validateStudentCreateSafe = (data: unknown) => {
+  return studentCreateSchema.safeParse(data);
+};
+
+export const validateStudentUpdateSafe = (data: unknown) => {
+  return studentUpdateSchema.safeParse(data);
+};
+
 export type StudentCreateInput = z.infer<typeof studentCreateSchema>;
 export type StudentUpdateInput = z.infer<typeof studentUpdateSchema>;
 export type StudentFilters = z.infer<typeof studentFiltersSchema>;
