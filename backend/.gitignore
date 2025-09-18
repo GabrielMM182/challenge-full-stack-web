@@ -46,3 +46,6 @@ pids/
 # Prisma
 prisma/migrations/
 !prisma/migrations/.gitkeep
+
+# swagger 
+swagger.json
