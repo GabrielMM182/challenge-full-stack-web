@@ -20,8 +20,3 @@ export {
   hashPasswordWithSalt,
   passwordSchema
 } from './password.util';
-
-export {
-  generateSwaggerDocs,
-  generateAndExit
-} from './swagger.generator';

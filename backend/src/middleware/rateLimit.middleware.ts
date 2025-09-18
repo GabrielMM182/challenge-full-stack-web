@@ -7,7 +7,7 @@ export const authRateLimit = rateLimit({
   max: 50,
   standardHeaders: true,
   legacyHeaders: false,
-  handler: (req: Request, res: Response) => {
+  handler: (_req: Request, res: Response) => {
     const response: ApiResponse = {
       success: false,
       error: {

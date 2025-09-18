@@ -112,7 +112,7 @@ export const errorHandler = (
   error: Error,
   req: Request,
   res: Response<ApiResponse>,
-  next: NextFunction
+  _next: NextFunction
 ): void => {
   console.error('Error occurred:', {
     error: error.message,
@@ -137,7 +137,7 @@ export const errorHandler = (
 export const notFoundHandler = (
   req: Request,
   res: Response<ApiResponse>,
-  next: NextFunction
+  _next: NextFunction
 ): void => {
   const response: ApiResponse = {
     success: false,

@@ -6,7 +6,7 @@ import { AuthenticationError } from '../errors';
 
 export const authenticateToken = async (
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
