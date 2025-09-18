@@ -16,27 +16,11 @@ import {
   findStudentByEmail,
 } from '../repositories/student.repository';
 import { validateStudentCreateSafe, validateStudentUpdateSafe } from '../validation/student.validation';
-
-export class StudentNotFoundError extends Error {
-  constructor(id: string) {
-    super(`Student with id ${id} not found`);
-    this.name = 'StudentNotFoundError';
-  }
-}
-
-export class StudentConflictError extends Error {
-  constructor(field: string, value: string) {
-    super(`Student with ${field} '${value}' already exists`);
-    this.name = 'StudentConflictError';
-  }
-}
-
-export class StudentValidationError extends Error {
-  constructor(message: string, public details?: any[]) {
-    super(message);
-    this.name = 'StudentValidationError';
-  }
-}
+import {
+  StudentNotFoundError,
+  StudentConflictError,
+  StudentValidationError,
+} from '../errors';
 
 
 export const createStudent = async (

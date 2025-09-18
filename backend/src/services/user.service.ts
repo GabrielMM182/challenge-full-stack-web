@@ -13,41 +13,13 @@ import {
   checkEmailExists,
 } from '../repositories/user.repository';
 import { hashPassword, comparePassword } from '../utils/password.util';
-
-export class UserNotFoundError extends Error {
-  constructor(id: string) {
-    super(`User with id ${id} not found`);
-    this.name = 'UserNotFoundError';
-  }
-}
-
-export class UserConflictError extends Error {
-  constructor(field: string, value: string) {
-    super(`User with ${field} '${value}' already exists`);
-    this.name = 'UserConflictError';
-  }
-}
-
-export class UserValidationError extends Error {
-  constructor(message: string, public details?: any[]) {
-    super(message);
-    this.name = 'UserValidationError';
-  }
-}
-
-export class UnauthorizedError extends Error {
-  constructor(message: string = 'Unauthorized operation') {
-    super(message);
-    this.name = 'UnauthorizedError';
-  }
-}
-
-export class InvalidPasswordError extends Error {
-  constructor() {
-    super('Current password is incorrect');
-    this.name = 'InvalidPasswordError';
-  }
-}
+import {
+  UserNotFoundError,
+  UserConflictError,
+  UserValidationError,
+  UnauthorizedError,
+  InvalidPasswordError,
+} from '../errors';
 
 export const findUserById = async (id: string): Promise<UserResponse> => {
   const user = await findUserByIdRepo(id);

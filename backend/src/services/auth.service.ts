@@ -13,34 +13,12 @@ import {
 import { hashPassword, comparePassword } from '../utils/password.util';
 import { generateToken } from '../utils/jwt.util';
 import { validateUserRegisterSafe, validateUserLoginSafe } from '../validation/auth.validation';
-
-export class AuthenticationError extends Error {
-  constructor(message: string = 'Authentication failed') {
-    super(message);
-    this.name = 'AuthenticationError';
-  }
-}
-
-export class UserAlreadyExistsError extends Error {
-  constructor(email: string) {
-    super(`User with email '${email}' already exists`);
-    this.name = 'UserAlreadyExistsError';
-  }
-}
-
-export class InvalidCredentialsError extends Error {
-  constructor() {
-    super('Invalid email or password');
-    this.name = 'InvalidCredentialsError';
-  }
-}
-
-export class AuthValidationError extends Error {
-  constructor(message: string, public details?: any[]) {
-    super(message);
-    this.name = 'AuthValidationError';
-  }
-}
+import {
+  AuthenticationError,
+  UserAlreadyExistsError,
+  InvalidCredentialsError,
+  AuthValidationError,
+} from '../errors';
 
 export const registerUser = async (data: UserRegisterInput): Promise<AuthResponse> => {
   const validation = validateUserRegisterSafe(data);

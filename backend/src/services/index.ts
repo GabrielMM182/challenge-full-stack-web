@@ -6,9 +6,6 @@ export {
   findStudents,
   studentExists,
   validateStudentData,
-  StudentNotFoundError,
-  StudentConflictError,
-  StudentValidationError,
 } from './student.service';
 
 export {
@@ -18,10 +15,6 @@ export {
   userExists as authUserExists,
   validateRegistrationData,
   validateLoginData,
-  AuthenticationError,
-  UserAlreadyExistsError,
-  InvalidCredentialsError,
-  AuthValidationError,
 } from './auth.service';
 
 export {
@@ -33,9 +26,24 @@ export {
   updateUserRole,
   userExists,
   getUserProfile,
-  UserNotFoundError,
-  UserConflictError,
-  UserValidationError,
-  UnauthorizedError,
-  InvalidPasswordError,
 } from './user.service';
+
+export {
+  AuthenticationError,
+  UnauthorizedError,
+  InvalidCredentialsError,
+  InvalidPasswordError,
+  ValidationError,
+  AuthValidationError,
+  StudentValidationError,
+  UserValidationError,
+  NotFoundError,
+  UserNotFoundError,
+  StudentNotFoundError,
+  ConflictError,
+  UserAlreadyExistsError,
+  UserConflictError,
+  StudentConflictError,
+  RateLimitError,
+  AppError,
+} from '../errors';
