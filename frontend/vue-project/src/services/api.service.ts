@@ -17,7 +17,7 @@ export class ApiService {
 
   constructor() {
     this.axiosInstance = axios.create({
-      baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api',
+      baseURL: 'http://localhost:3000/api',
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
@@ -38,19 +38,6 @@ export class ApiService {
       (error) => {
         console.error('[API Request Error]', error)
         return Promise.reject(error)
-      }
-    )
-
-    this.axiosInstance.interceptors.response.use(
-      (response: AxiosResponse) => {
-        if (import.meta.env.DEV) {
-          console.log(`[API Response] ${response.status} ${response.config.url}`, response.data)
-        }
-
-        return response
-      },
-      (error: AxiosError) => {
-        return this.handleResponseError(error)
       }
     )
   }
