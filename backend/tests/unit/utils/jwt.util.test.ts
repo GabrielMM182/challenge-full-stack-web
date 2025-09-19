@@ -1,5 +1,4 @@
 import { generateToken, verifyToken, decodeToken, extractTokenFromHeader, isTokenExpired } from '../../../src/utils/jwt.util';
-import { Role } from '../../../src/types/auth.types';
 
 process.env['JWT_SECRET'] = 'test-secret-key';
 process.env['JWT_EXPIRES_IN'] = '1h';
@@ -7,8 +6,7 @@ process.env['JWT_EXPIRES_IN'] = '1h';
 describe('JWT Utility Functions', () => {
   const mockPayload = {
     userId: 'user123',
-    email: 'test@example.com',
-    role: Role.ADMIN
+    email: 'test@example.com'
   };
 
   describe('generateToken', () => {
@@ -33,7 +31,6 @@ describe('JWT Utility Functions', () => {
       
       expect(decoded.userId).toBe(mockPayload.userId);
       expect(decoded.email).toBe(mockPayload.email);
-      expect(decoded.role).toBe(mockPayload.role);
       expect(decoded.iat).toBeDefined();
       expect(decoded.exp).toBeDefined();
     });
@@ -55,7 +52,6 @@ describe('JWT Utility Functions', () => {
       expect(decoded).not.toBeNull();
       expect(decoded!.userId).toBe(mockPayload.userId);
       expect(decoded!.email).toBe(mockPayload.email);
-      expect(decoded!.role).toBe(mockPayload.role);
     });
 
     test('should return null for invalid token', () => {

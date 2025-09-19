@@ -1,16 +1,13 @@
 import {
   UserRegisterInput,
   UserResponse,
-  Role,
 } from '../types/auth.types';
 import {
   findUserById as findUserByIdRepo,
   findUserByIdWithPassword,
   updateUser as updateUserRepo,
   deleteUser as deleteUserRepo,
-  findAllUsers as findAllUsersRepo,
-  updateUserRole as updateUserRoleRepo,
-  checkEmailExists,
+  findAllUsers as findAllUsersRepo,  checkEmailExists,
 } from '../repositories/user.repository';
 import { hashPassword, comparePassword } from '../utils/password.util';
 import {
@@ -44,7 +41,7 @@ export const updateUserProfile = async (
     throw new UnauthorizedError('Invalid requesting user');
   }
 
-  if (requestingUser.id !== id && requestingUser.role !== Role.SUPER_ADMIN) {
+  if (requestingUser.id !== id) {
     throw new UnauthorizedError('You can only update your own profile');
   }
 
@@ -93,7 +90,7 @@ export const changeUserPassword = async (
     throw new UnauthorizedError('Invalid requesting user');
   }
 
-  if (requestingUser.id !== id && requestingUser.role !== Role.SUPER_ADMIN) {
+  if (requestingUser.id !== id) {
     throw new UnauthorizedError('You can only change your own password');
   }
 
@@ -124,8 +121,8 @@ export const deleteUser = async (id: string, requestingUserId: string): Promise<
   }
 
   const requestingUser = await findUserByIdRepo(requestingUserId);
-  if (!requestingUser || requestingUser.role !== Role.SUPER_ADMIN) {
-    throw new UnauthorizedError('Only super admins can delete users');
+  if (!requestingUser) {
+    throw new UnauthorizedError('Only authenticated users can delete users');
   }
 
   if (requestingUser.id === id) {
@@ -161,7 +158,6 @@ export const getAllUsers = async (requestingUserId: string): Promise<UserRespons
 
 export const updateUserRole = async (
   id: string,
-  newRole: Role,
   requestingUserId: string
 ): Promise<UserResponse> => {
   const existingUser = await findUserByIdRepo(id);
@@ -170,24 +166,18 @@ export const updateUserRole = async (
   }
 
   const requestingUser = await findUserByIdRepo(requestingUserId);
-  if (!requestingUser || requestingUser.role !== Role.SUPER_ADMIN) {
-    throw new UnauthorizedError('Only super admins can change user roles');
+  if (!requestingUser) {
+    throw new UnauthorizedError('Only authenticated users can change user roles');
   }
 
   if (requestingUser.id === id) {
     throw new UnauthorizedError('You cannot change your own role');
   }
 
-  if (!Object.values(Role).includes(newRole)) {
-    throw new UserValidationError('Invalid role specified');
-  }
+
 
   try {
-    const updatedUser = await updateUserRoleRepo(id, newRole);
-    if (!updatedUser) {
-      throw new UserNotFoundError(id);
-    }
-    return updatedUser;
+    throw new Error('Role system has been removed');
   } catch (error) {
     if (error instanceof UserNotFoundError || error instanceof UserValidationError) {
       throw error;
@@ -217,7 +207,7 @@ export const getUserProfile = async (id: string, requestingUserId: string): Prom
     throw new UnauthorizedError('Invalid requesting user');
   }
 
-  if (requestingUser.id !== id && requestingUser.role !== Role.ADMIN && requestingUser.role !== Role.SUPER_ADMIN) {
+  if (requestingUser.id !== id) {
     throw new UnauthorizedError('You can only view your own profile');
   }
 

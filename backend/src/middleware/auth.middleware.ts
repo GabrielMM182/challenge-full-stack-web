@@ -22,7 +22,6 @@ export const authenticateToken = async (
     (req as AuthenticatedRequest).user = {
       id: decoded.userId,
       email: decoded.email,
-      role: decoded.role,
     };
 
     next();

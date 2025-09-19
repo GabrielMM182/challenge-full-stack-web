@@ -3,7 +3,6 @@ import {
   UserLoginInput,
   UserResponse,
   AuthResponse,
-  Role,
 } from '../types/auth.types';
 import {
   createUser as createUserRepo,
@@ -49,7 +48,6 @@ export const registerUser = async (data: UserRegisterInput): Promise<AuthRespons
     const token = await generateToken({
       userId: user.id,
       email: user.email,
-      role: user.role,
     });
 
     return {
@@ -91,7 +89,6 @@ export const loginUser = async (data: UserLoginInput): Promise<AuthResponse> => 
       id: userWithPassword.id,
       name: userWithPassword.name,
       email: userWithPassword.email,
-      role: userWithPassword.role as Role,
       createdAt: userWithPassword.createdAt,
       updatedAt: userWithPassword.updatedAt,
     };
@@ -99,7 +96,6 @@ export const loginUser = async (data: UserLoginInput): Promise<AuthResponse> => 
     const token = await generateToken({
       userId: user.id,
       email: user.email,
-      role: user.role,
     });
 
     return {

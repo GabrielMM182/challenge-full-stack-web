@@ -7,10 +7,9 @@ import {
   deleteUser,
   checkEmailExists,
   findAllUsers,
-  updateUserRole,
   initializePrisma,
 } from '../../../src/repositories/user.repository';
-import { UserRegisterInput, Role } from '../../../src/types/auth.types';
+import { UserRegisterInput } from '../../../src/types/auth.types';
 
 const mockPrisma = {
   user: {
@@ -35,14 +34,13 @@ describe('User Repository', () => {
     name: 'Admin User',
     email: 'admin@test.com',
     password: 'hashedPassword123',
-    role: Role.ADMIN,
     createdAt: new Date('2024-01-01'),
     updatedAt: new Date('2024-01-01'),
     deletedAt: null,
   };
 
   describe('createUser', () => {
-    it('should create a user with default ADMIN role', async () => {
+    it('should create a user', async () => {
       const userData: UserRegisterInput = {
         name: 'Admin User',
         email: 'admin@test.com',
@@ -58,7 +56,6 @@ describe('User Repository', () => {
           name: userData.name,
           email: userData.email,
           password: userData.password,
-          role: Role.ADMIN,
         },
       });
 
@@ -66,7 +63,6 @@ describe('User Repository', () => {
         id: mockUser.id,
         name: mockUser.name,
         email: mockUser.email,
-        role: mockUser.role,
         createdAt: mockUser.createdAt,
         updatedAt: mockUser.updatedAt,
       });
@@ -115,7 +111,6 @@ describe('User Repository', () => {
         id: mockUser.id,
         name: mockUser.name,
         email: mockUser.email,
-        role: mockUser.role,
         createdAt: mockUser.createdAt,
         updatedAt: mockUser.updatedAt,
       });
@@ -290,7 +285,6 @@ describe('User Repository', () => {
           id: mockUser.id,
           name: mockUser.name,
           email: mockUser.email,
-          role: mockUser.role,
           createdAt: mockUser.createdAt,
           updatedAt: mockUser.updatedAt,
         },
@@ -298,43 +292,5 @@ describe('User Repository', () => {
     });
   });
 
-  describe('updateUserRole', () => {
-    it('should update user role', async () => {
-      mockPrisma.user.findFirst.mockResolvedValue(mockUser);
-      mockPrisma.user.update.mockResolvedValue({
-        ...mockUser,
-        role: Role.SUPER_ADMIN,
-        updatedAt: new Date('2024-01-02'),
-      });
 
-      const result = await updateUserRole('user-1', Role.SUPER_ADMIN);
-
-      expect(mockPrisma.user.findFirst).toHaveBeenCalledWith({
-        where: {
-          id: 'user-1',
-          deletedAt: null,
-        },
-      });
-
-      expect(mockPrisma.user.update).toHaveBeenCalledWith({
-        where: { id: 'user-1' },
-        data: {
-          role: Role.SUPER_ADMIN,
-          updatedAt: expect.any(Date),
-        },
-      });
-
-      expect(result).toBeDefined();
-      expect(result?.role).toBe(Role.SUPER_ADMIN);
-    });
-
-    it('should return null if user not found', async () => {
-      mockPrisma.user.findFirst.mockResolvedValue(null);
-
-      const result = await updateUserRole('non-existent', Role.SUPER_ADMIN);
-
-      expect(result).toBeNull();
-      expect(mockPrisma.user.update).not.toHaveBeenCalled();
-    });
-  });
 });

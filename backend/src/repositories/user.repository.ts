@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { UserRegisterInput, UserResponse, Role } from '../types/auth.types';
+import { UserRegisterInput, UserResponse } from '../types/auth.types';
 
 let prisma: PrismaClient;
 
@@ -13,7 +13,6 @@ const transformUser = (user: any): UserResponse => ({
   id: user.id,
   name: user.name,
   email: user.email,
-  role: user.role as Role,
   createdAt: user.createdAt,
   updatedAt: user.updatedAt,
 });
@@ -24,7 +23,6 @@ export const createUser = async (data: UserRegisterInput): Promise<UserResponse>
       name: data.name,
       email: data.email,
       password: data.password,
-      role: Role.ADMIN, 
     },
   });
 
@@ -130,26 +128,5 @@ export const findAllUsers = async (): Promise<UserResponse[]> => {
   return users.map(transformUser);
 };
 
-export const updateUserRole = async (id: string, role: Role): Promise<UserResponse | null> => {
-  const existingUser = await prisma.user.findFirst({
-    where: {
-      id,
-      deletedAt: null,
-    },
-  });
 
-  if (!existingUser) {
-    return null;
-  }
-
-  const user = await prisma.user.update({
-    where: { id },
-    data: {
-      role,
-      updatedAt: new Date(),
-    },
-  });
-
-  return transformUser(user);
-};
 

@@ -97,7 +97,6 @@ export const getMeHandler = async (
       data: {
         id: user.id,
         email: user.email,
-        role: user.role,
       },
       timestamp: new Date().toISOString(),
     });

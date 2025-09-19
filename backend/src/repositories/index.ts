@@ -18,7 +18,6 @@ export {
   deleteUser,
   checkEmailExists,
   findAllUsers,
-  updateUserRole,
 } from './user.repository';
 
 export {

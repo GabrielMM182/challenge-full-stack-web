@@ -1,6 +1,6 @@
 import jwt, { SignOptions } from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { JWTPayload, Role } from '../types/auth.types';
+import { JWTPayload } from '../types/auth.types';
 
 dotenv.config();
 
@@ -13,7 +13,6 @@ if (!JWT_SECRET) {
 type JWTPayloadInput = {
   userId: string;
   email: string;
-  role: Role;
 };
 
 export const generateToken = async (payload: JWTPayloadInput): Promise<string> => {
