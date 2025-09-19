@@ -1,12 +1,23 @@
 import { apiService } from './api.service'
-import type { ApiResponse, Student, StudentListResponse } from '@/types'
+import type { ApiResponse, Student, StudentListResponse, StudentQueryParams } from '@/types'
 
 export class StudentService {
   private readonly baseUrl = '/students'
 
-  async getStudents(): Promise<StudentListResponse> {
+  async getStudents(params?: StudentQueryParams): Promise<StudentListResponse> {
     try {
-      const response = await apiService.get<ApiResponse<StudentListResponse>>(this.baseUrl)
+      const queryParams = new URLSearchParams()
+      
+      if (params) {
+        Object.entries(params).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && value !== '') {
+            queryParams.append(key, String(value))
+          }
+        })
+      }
+      
+      const url = queryParams.toString() ? `${this.baseUrl}?${queryParams.toString()}` : this.baseUrl
+      const response = await apiService.get<ApiResponse<StudentListResponse>>(url)
       
       if (response.success && response.data) {
         return response.data

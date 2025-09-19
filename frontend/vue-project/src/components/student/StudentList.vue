@@ -14,6 +14,21 @@
         </v-btn>
       </v-col>
     </v-row>
+
+    <v-row class="mb-4">
+      <v-col cols="12" md="6">
+        <v-text-field
+          v-model="searchQuery"
+          label="Buscar por nome ou email"
+          prepend-inner-icon="mdi-magnify"
+          variant="outlined"
+          density="compact"
+          clearable
+          @input="handleSearch"
+          @click:clear="clearSearch"
+        />
+      </v-col>
+    </v-row>
     <v-card v-if="isLoading" class="pa-4">
       <v-row justify="center">
         <v-col cols="auto">
@@ -61,10 +76,13 @@
         :headers="tableHeaders"
         :items="students"
         :loading="isLoading"
+        :sort-by="sortBy"
         class="elevation-0"
         item-key="id"
         no-data-text="Nenhum estudante encontrado"
         loading-text="Carregando estudantes..."
+        show-select="false"
+        @update:sort-by="handleSortChange"
       >
         <template #item.name="{ item }">
           <div 
@@ -182,7 +200,7 @@
 import { defineComponent } from 'vue'
 import { useDisplay } from 'vuetify'
 import { studentService } from '@/services'
-import type { Student } from '@/types'
+import type { Student, StudentQueryParams } from '@/types'
 import StudentDetailsModal from './StudentDetailsModal.vue'
 
 export default defineComponent({
@@ -204,6 +222,9 @@ export default defineComponent({
       error: null as string | null,
       showDetailsModal: false,
       selectedStudentId: null as string | null,
+      searchQuery: '',
+      searchTimeout: null as NodeJS.Timeout | null,
+      sortBy: [{ key: 'name', order: 'asc' }],
       tableHeaders: [
         {
           title: 'Nome',
@@ -250,7 +271,18 @@ export default defineComponent({
       this.error = null
       
       try {
-        const response = await studentService.getStudents()
+        const params: any = {}
+        
+        if (this.searchQuery && this.searchQuery.trim()) {
+          params.search = this.searchQuery.trim()
+        }
+        
+        if (this.sortBy && this.sortBy.length > 0) {
+          params.sortBy = this.sortBy[0].key
+          params.sortOrder = this.sortBy[0].order
+        }
+        
+        const response = await studentService.getStudents(params)
         this.students = response.data
       } catch (error) {
         console.error('Error fetching students:', error)
@@ -296,6 +328,29 @@ export default defineComponent({
     handleViewStudent(student: Student) {
       this.selectedStudentId = student.id
       this.showDetailsModal = true
+    },
+
+    handleSearch() {
+      if (this.searchTimeout) {
+        clearTimeout(this.searchTimeout)
+      }
+      
+      this.searchTimeout = setTimeout(() => {
+        this.fetchStudents()
+      }, 500)
+    },
+
+    clearSearch() {
+      this.searchQuery = ''
+      if (this.searchTimeout) {
+        clearTimeout(this.searchTimeout)
+      }
+      this.fetchStudents()
+    },
+
+    handleSortChange(sortBy: any) {
+      this.sortBy = sortBy
+      this.fetchStudents()
     }
   }
 })
@@ -328,5 +383,22 @@ export default defineComponent({
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
   transition: all 0.2s ease;
+}
+
+:deep(.v-data-table-header__content) {
+  position: relative;
+}
+
+:deep(.v-data-table-header__sort-icon) {
+  opacity: 0.6 !important;
+  transition: opacity 0.2s ease;
+}
+
+:deep(.v-data-table-header__content:hover .v-data-table-header__sort-icon) {
+  opacity: 1 !important;
+}
+
+:deep(.v-data-table-header--sorted .v-data-table-header__sort-icon) {
+  opacity: 1 !important;
 }
 </style>

@@ -25,3 +25,10 @@ export interface StudentFilters {
   cpf?: string
   search?: string
 }
+
+export interface StudentQueryParams extends StudentFilters {
+  page?: number
+  limit?: number
+  sortBy?: string
+  sortOrder?: 'asc' | 'desc'
+}
