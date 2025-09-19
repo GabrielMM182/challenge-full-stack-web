@@ -2,15 +2,33 @@
   <div>
     <v-row class="mb-4" align="center">
       <v-col>
-        <h2 class="text-h4">Lista de Estudantes</h2>
+        <h2 class="text-h5">Lista de Estudantes(para realizar um cadastro, atualização ou deletar deve ser feito login/cadastro)</h2>
       </v-col>
-      <v-col cols="auto">
+      <v-col v-if="authStore.isAuthenticated" cols="auto" class="d-flex gap-2">
         <v-btn
           color="primary"
           prepend-icon="mdi-plus"
           @click="handleCreateStudent"
         >
           Cadastrar Aluno
+        </v-btn>
+        <v-btn
+          color="error"
+          variant="outlined"
+          prepend-icon="mdi-logout"
+          @click="handleLogout"
+        >
+          Sair
+        </v-btn>
+      </v-col>
+      <v-col v-else cols="auto">
+        <v-btn
+          color="primary"
+          variant="outlined"
+          prepend-icon="mdi-login"
+          @click="handleLogin"
+        >
+          Fazer Login
         </v-btn>
       </v-col>
     </v-row>
@@ -71,14 +89,24 @@
       </v-icon>
       <h3 class="text-h6 mb-2">Nenhum estudante encontrado</h3>
       <p class="text-body-2 text-grey mb-4">
-        Comece cadastrando o primeiro estudante do sistema.
+        {{ authStore.isAuthenticated ? 'Comece cadastrando o primeiro estudante do sistema.' : 'Faça login para cadastrar estudantes.' }}
       </p>
       <v-btn
+        v-if="authStore.isAuthenticated"
         color="primary"
         prepend-icon="mdi-plus"
         @click="handleCreateStudent"
       >
         Cadastrar Primeiro Aluno
+      </v-btn>
+      <v-btn
+        v-else
+        color="primary"
+        variant="outlined"
+        prepend-icon="mdi-login"
+        @click="handleLogin"
+      >
+        Fazer Login
       </v-btn>
     </v-card>
     <v-card v-else-if="!isMobile" class="elevation-2">
@@ -92,6 +120,7 @@
         no-data-text="Nenhum estudante encontrado"
         loading-text="Carregando estudantes..."
         show-select="false"
+        hide-default-footer
         @update:sort-by="handleSortChange"
       >
         <template #item.name="{ item }">
@@ -112,7 +141,7 @@
         <template #item.cpf="{ item }">
           <span class="text-mono">{{ formatCpf(item.cpf) }}</span>
         </template>
-        <template #item.actions="{ item }">
+        <template v-if="authStore.isAuthenticated" #item.actions="{ item }">
           <div class="d-flex gap-2">
             <v-btn
               icon="mdi-pencil"
@@ -153,7 +182,7 @@
               <div class="font-weight-medium text-body-1 text-primary">{{ student.name }}</div>
               <div class="text-body-2 text-grey">{{ student.email }}</div>
             </v-col>
-            <v-col cols="auto">
+            <v-col v-if="authStore.isAuthenticated" cols="auto">
               <v-menu>
                 <template #activator="{ props }">
                   <v-btn
@@ -216,7 +245,6 @@
       </v-col>
     </v-row>
 
-    <!-- Student Details Modal -->
     <StudentDetailsModal
       v-model="showDetailsModal"
       :student-id="selectedStudentId"
@@ -232,6 +260,7 @@ import { useDisplay } from 'vuetify'
 import { studentService } from '@/services'
 import type { Student, StudentQueryParams } from '@/types'
 import StudentDetailsModal from './StudentDetailsModal.vue'
+import { useAuthStore } from '@/stores/auth.store'
 
 export default defineComponent({
   name: 'StudentList',
@@ -242,7 +271,11 @@ export default defineComponent({
   
   setup() {
     const { mobile } = useDisplay()
-    return { isMobile: mobile }
+    const authStore = useAuthStore()
+    return { 
+      isMobile: mobile,
+      authStore
+    }
   },
 
   data() {
@@ -266,7 +299,7 @@ export default defineComponent({
         { title: '10 por página', value: 10 },
       ],
 
-      tableHeaders: [
+      baseTableHeaders: [
         {
           title: 'Nome',
           key: 'name',
@@ -290,15 +323,25 @@ export default defineComponent({
           key: 'cpf',
           sortable: true,
           width: '15%'
-        },
-        {
-          title: 'Ações',
-          key: 'actions',
-          sortable: false,
-          width: '10%',
-          align: 'center'
         }
-      ]
+      ],
+      actionsHeader: {
+        title: 'Ações',
+        key: 'actions',
+        sortable: false,
+        width: '10%',
+        align: 'center'
+      }
+    }
+  },
+
+  computed: {
+    tableHeaders() {
+      const headers = [...this.baseTableHeaders]
+      if (this.authStore.isAuthenticated) {
+        headers.push(this.actionsHeader)
+      }
+      return headers
     }
   },
 
@@ -356,6 +399,15 @@ export default defineComponent({
 
     clearError() {
       this.error = null
+    },
+
+    handleLogin() {
+      this.$router.push('/login')
+    },
+
+    handleLogout() {
+      this.authStore.logout()
+      this.$router.push('/login')
     },
 
     handleCreateStudent() {
