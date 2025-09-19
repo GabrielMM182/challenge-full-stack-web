@@ -1,1 +1,1 @@
-// Export all components
+export { default as StudentList } from './student/StudentList.vue'
