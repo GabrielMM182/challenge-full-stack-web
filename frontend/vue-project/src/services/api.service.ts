@@ -40,6 +40,11 @@ export class ApiService {
         return Promise.reject(error)
       }
     )
+
+    this.axiosInstance.interceptors.response.use(
+      (response) => response,
+      (error) => this.handleResponseError(error)
+    )
   }
 
   private handleResponseError(error: AxiosError): Promise<never> {
@@ -56,26 +61,28 @@ export class ApiService {
       const status = response.status
       const errorData = response.data as any
 
+      const backendMessage = errorData?.error?.message || errorData?.message
+
       switch (status) {
         case 400:
-          throw new Error(errorData?.message || 'Dados inválidos fornecidos')
+          throw new Error(backendMessage || 'Dados inválidos fornecidos')
         case 401:
           this.clearAuthToken()
-          throw new Error('Sessão expirada. Faça login novamente.')
+          throw new Error(backendMessage || 'Sessão expirada. Faça login novamente.')
         case 403:
-          throw new Error('Acesso negado')
+          throw new Error(backendMessage || 'Acesso negado')
         case 404:
-          throw new Error('Recurso não encontrado')
+          throw new Error(backendMessage || 'Recurso não encontrado')
         case 409:
-          throw new Error(errorData?.message || 'Conflito de dados')
+          throw new Error(backendMessage || 'Conflito de dados')
         case 422:
-          throw new Error(errorData?.message || 'Dados de validação inválidos')
+          throw new Error(backendMessage || 'Dados de validação inválidos')
         case 429:
-          throw new Error('Muitas tentativas. Tente novamente mais tarde.')
+          throw new Error(backendMessage || 'Muitas tentativas. Tente novamente mais tarde.')
         case 500:
-          throw new Error('Erro interno do servidor. Tente novamente.')
+          throw new Error(backendMessage || 'Erro interno do servidor. Tente novamente.')
         default:
-          throw new Error(`Erro do servidor: ${status}`)
+          throw new Error(backendMessage || `Erro do servidor: ${status}`)
       }
     } else if (request) {
       if (message.includes('timeout')) {
@@ -91,39 +98,23 @@ export class ApiService {
   }
 
   public async get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    try {
-      const response = await this.axiosInstance.get<T>(url, config)
-      return response.data
-    } catch (error) {
-      throw error
-    }
+    const response = await this.axiosInstance.get<T>(url, config)
+    return response.data
   }
 
   public async post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-    try {
-      const response = await this.axiosInstance.post<T>(url, data, config)
-      return response.data
-    } catch (error) {
-      throw error
-    }
+    const response = await this.axiosInstance.post<T>(url, data, config)
+    return response.data
   }
 
   public async put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-    try {
-      const response = await this.axiosInstance.put<T>(url, data, config)
-      return response.data
-    } catch (error) {
-      throw error
-    }
+    const response = await this.axiosInstance.put<T>(url, data, config)
+    return response.data
   }
 
   public async delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    try {
-      const response = await this.axiosInstance.delete<T>(url, config)
-      return response.data
-    } catch (error) {
-      throw error
-    }
+    const response = await this.axiosInstance.delete<T>(url, config)
+    return response.data
   }
 
   public setAuthToken(token: string): void {
