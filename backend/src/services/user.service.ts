@@ -156,36 +156,6 @@ export const getAllUsers = async (requestingUserId: string): Promise<UserRespons
   }
 };
 
-export const updateUserRole = async (
-  id: string,
-  requestingUserId: string
-): Promise<UserResponse> => {
-  const existingUser = await findUserByIdRepo(id);
-  if (!existingUser) {
-    throw new UserNotFoundError(id);
-  }
-
-  const requestingUser = await findUserByIdRepo(requestingUserId);
-  if (!requestingUser) {
-    throw new UnauthorizedError('Only authenticated users can change user roles');
-  }
-
-  if (requestingUser.id === id) {
-    throw new UnauthorizedError('You cannot change your own role');
-  }
-
-
-
-  try {
-    throw new Error('Role system has been removed');
-  } catch (error) {
-    if (error instanceof UserNotFoundError || error instanceof UserValidationError) {
-      throw error;
-    }
-    throw new Error('Failed to update user role');
-  }
-};
-
 export const userExists = async (id: string): Promise<boolean> => {
   try {
     const user = await findUserByIdRepo(id);

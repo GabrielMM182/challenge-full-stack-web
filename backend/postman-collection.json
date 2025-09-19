@@ -86,7 +86,6 @@
                   "    pm.expect(jsonData.data).to.have.property('user');",
                   "    pm.expect(jsonData.data.user).to.have.property('id');",
                   "    pm.expect(jsonData.data.user).to.have.property('email');",
-                  "    pm.expect(jsonData.data.user).to.have.property('role');",
                   "});"
                 ]
               }
@@ -188,7 +187,6 @@
                   "    const jsonData = pm.response.json();",
                   "    pm.expect(jsonData.data).to.have.property('id');",
                   "    pm.expect(jsonData.data).to.have.property('email');",
-                  "    pm.expect(jsonData.data).to.have.property('role');",
                   "});"
                 ]
               }

@@ -8,25 +8,23 @@ async function main() {
 
   const hashedPassword = await bcrypt.hash('admin123', 12);
   
-  const adminUser = await prisma.user.upsert({
-    where: { email: 'admin@example.com' },
+  const UserOne = await prisma.user.upsert({
+    where: { email: 'userOne@example.com' },
     update: {},
     create: {
-      email: 'admin@example.com',
+      email: 'userOne@example.com',
       password: hashedPassword,
-      name: 'Admin User',
-      role: 'ADMIN',
+      name: 'User 1',
     },
   });
 
-  const superAdminUser = await prisma.user.upsert({
-    where: { email: 'superadmin@example.com' },
+  const UserTwo = await prisma.user.upsert({
+    where: { email: 'userTwo@example.com' },
     update: {},
     create: {
-      email: 'superadmin@example.com',
+      email: 'userTwo@example.com',
       password: hashedPassword,
-      name: 'Super Admin User',
-      role: 'SUPER_ADMIN',
+      name: 'User 2',
     },
   });
 
@@ -66,14 +64,14 @@ async function main() {
   await prisma.studentUser.upsert({
     where: {
       userId_studentId_action: {
-        userId: adminUser.id,
+        userId: UserOne.id,
         studentId: student1.id,
         action: 'CREATED',
       },
     },
     update: {},
     create: {
-      userId: adminUser.id,
+      userId: UserOne.id,
       studentId: student1.id,
       action: 'CREATED',
     },
@@ -82,14 +80,14 @@ async function main() {
   await prisma.studentUser.upsert({
     where: {
       userId_studentId_action: {
-        userId: adminUser.id,
+        userId: UserOne.id,
         studentId: student2.id,
         action: 'CREATED',
       },
     },
     update: {},
     create: {
-      userId: adminUser.id,
+      userId: UserOne.id,
       studentId: student2.id,
       action: 'CREATED',
     },
@@ -98,21 +96,21 @@ async function main() {
   await prisma.studentUser.upsert({
     where: {
       userId_studentId_action: {
-        userId: superAdminUser.id,
+        userId: UserTwo.id,
         studentId: student3.id,
         action: 'CREATED',
       },
     },
     update: {},
     create: {
-      userId: superAdminUser.id,
+      userId: UserTwo.id,
       studentId: student3.id,
       action: 'CREATED',
     },
   });
 
   console.log('Database seeding completed');
-  console.log(`Created users: ${adminUser.name}, ${superAdminUser.name}`);
+  console.log(`Created users: ${UserOne.name}, ${UserTwo.name}`);
   console.log(`Created students: ${student1.name}, ${student2.name}, ${student3.name}`);
 }
 

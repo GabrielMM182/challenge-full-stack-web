@@ -23,7 +23,6 @@ export {
   changeUserPassword,
   deleteUser,
   getAllUsers,
-  updateUserRole,
   userExists,
   getUserProfile,
 } from './user.service';

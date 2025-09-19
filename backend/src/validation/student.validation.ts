@@ -7,7 +7,7 @@ const cpfValidator = z.string().refine(
     return validateCPF(cpf);
   },
   {
-    message: 'Invalid CPF format or checksum',
+    message: 'Cpf must contain 11 digits without special characters and must be a valid cpf',
   }
 );
 
