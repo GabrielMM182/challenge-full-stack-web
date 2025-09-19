@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { StudentList } from '@/components'
+import StudentList from '@/components/student/StudentList.vue'
 
 export default defineComponent({
   name: 'StudentsView',

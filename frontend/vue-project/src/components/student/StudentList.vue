@@ -67,14 +67,17 @@
         loading-text="Carregando estudantes..."
       >
         <template #item.name="{ item }">
-          <div class="d-flex align-center">
+          <div 
+            class="d-flex align-center cursor-pointer hover-row"
+            @click="handleViewStudent(item)"
+          >
             <v-avatar color="primary" size="32" class="mr-3">
               <span class="text-white text-body-2">
                 {{ getInitials(item.name) }}
               </span>
             </v-avatar>
             <div>
-              <div class="font-weight-medium">{{ item.name }}</div>
+              <div class="font-weight-medium text-primary">{{ item.name }}</div>
             </div>
           </div>
         </template>
@@ -106,7 +109,8 @@
       <v-card
         v-for="student in students"
         :key="student.id"
-        class="mb-3 elevation-2"
+        class="mb-3 elevation-2 cursor-pointer hover-card"
+        @click="handleViewStudent(student)"
       >
         <v-card-text>
           <v-row align="center">
@@ -118,7 +122,7 @@
               </v-avatar>
             </v-col>
             <v-col>
-              <div class="font-weight-medium text-body-1">{{ student.name }}</div>
+              <div class="font-weight-medium text-body-1 text-primary">{{ student.name }}</div>
               <div class="text-body-2 text-grey">{{ student.email }}</div>
             </v-col>
             <v-col cols="auto">
@@ -164,6 +168,13 @@
         </v-card-text>
       </v-card>
     </div>
+
+    <!-- Student Details Modal -->
+    <StudentDetailsModal
+      v-model="showDetailsModal"
+      :student-id="selectedStudentId"
+      @edit-student="handleEditStudent"
+    />
   </div>
 </template>
 
@@ -172,9 +183,14 @@ import { defineComponent } from 'vue'
 import { useDisplay } from 'vuetify'
 import { studentService } from '@/services'
 import type { Student } from '@/types'
+import StudentDetailsModal from './StudentDetailsModal.vue'
 
 export default defineComponent({
   name: 'StudentList',
+  
+  components: {
+    StudentDetailsModal
+  },
   
   setup() {
     const { mobile } = useDisplay()
@@ -186,6 +202,8 @@ export default defineComponent({
       students: [] as Student[],
       isLoading: false,
       error: null as string | null,
+      showDetailsModal: false,
+      selectedStudentId: null as string | null,
       tableHeaders: [
         {
           title: 'Nome',
@@ -273,6 +291,11 @@ export default defineComponent({
 
     handleDeleteStudent(student: Student) {
       console.log('Delete student:', student.id)
+    },
+
+    handleViewStudent(student: Student) {
+      this.selectedStudentId = student.id
+      this.showDetailsModal = true
     }
   }
 })
@@ -289,5 +312,21 @@ export default defineComponent({
 
 .gap-2 {
   gap: 8px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.hover-row:hover {
+  background-color: rgba(var(--v-theme-primary), 0.04);
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.hover-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.2s ease;
 }
 </style>

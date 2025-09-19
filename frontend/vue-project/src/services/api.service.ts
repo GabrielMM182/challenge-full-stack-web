@@ -33,10 +33,6 @@ export class ApiService {
         if (this.authToken) {
           config.headers.Authorization = `Bearer ${this.authToken}`
         }
-        if (import.meta.env.DEV) {
-          console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`, config.data)
-        }
-
         return config
       },
       (error) => {
