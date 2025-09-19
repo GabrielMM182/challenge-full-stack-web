@@ -78,11 +78,8 @@ export class StudentService {
 
   async deleteStudent(id: string): Promise<void> {
     try {
-      const response = await apiService.delete<ApiResponse<void>>(`${this.baseUrl}/${id}`)
-      
-      if (!response.success) {
-        throw new Error(response.error?.message || 'Erro ao excluir estudante')
-      }
+      await apiService.delete(`${this.baseUrl}/${id}`)
+
     } catch (error) {
       console.error('Error deleting student:', error)
       throw error
