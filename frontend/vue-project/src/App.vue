@@ -8,9 +8,15 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { useAuthStore } from '@/stores/auth.store'
 
 export default defineComponent({
-  name: 'App'
+  name: 'App',
+  
+  async mounted() {
+    const authStore = useAuthStore()
+    await authStore.initializeAuth()
+  }
 })
 </script>
 

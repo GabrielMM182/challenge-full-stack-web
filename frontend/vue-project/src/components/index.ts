@@ -1,1 +1,5 @@
 export { default as StudentList } from './student/StudentList.vue'
+export { default as StudentDetailsModal } from './student/StudentDetailsModal.vue'
+export { default as StudentForm } from './student/StudentForm.vue'
+export { default as StudentCreateDialog } from './student/StudentCreateDialog.vue'
+export { default as StudentDeleteDialog } from './student/StudentDeleteDialog.vue'

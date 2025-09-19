@@ -33,32 +33,27 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
   
-  // Ensure auth is initialized
   if (!authStore.token) {
-    authStore.initializeAuth()
+    await authStore.initializeAuth()
   }
   
-  // Get token directly to avoid computed property issues during navigation
-  const hasToken = !!authStore.token
+  const isAuthenticated = authStore.isAuthenticated
   
-  // Handle guest-only routes (login, register) - redirect authenticated users
   if (to.meta.requiresGuest) {
-    if (hasToken) {
+    if (isAuthenticated) {
       return next('/students')
     }
     return next()
   }
   
-  // Allow access to routes that don't require authentication
   if (to.meta.allowUnauthenticated) {
     return next()
   }
   
-  // For all other routes, require authentication
-  if (!hasToken) {
+  if (!isAuthenticated) {
     return next('/login')
   }
   

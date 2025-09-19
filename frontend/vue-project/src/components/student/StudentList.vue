@@ -37,7 +37,7 @@
       <v-col cols="12" md="6">
         <v-text-field
           v-model="searchQuery"
-          label="Buscar por nome, email, RA ou CPF"
+          label="Buscar por nome ou email"
           prepend-inner-icon="mdi-magnify"
           variant="outlined"
           density="compact"
@@ -250,6 +250,19 @@
       :student-id="selectedStudentId"
       @edit-student="handleEditStudent"
     />
+
+    <StudentCreateDialog
+      v-model="showCreateDialog"
+      :student="studentToEdit"
+      @student-created="handleStudentCreated"
+      @student-updated="handleStudentUpdated"
+    />
+
+    <StudentDeleteDialog
+      v-model="showDeleteDialog"
+      :student="studentToDelete"
+      @student-deleted="handleStudentDeleted"
+    />
   </div>
 </template>
 
@@ -260,13 +273,17 @@ import { useDisplay } from 'vuetify'
 import { studentService } from '@/services'
 import type { Student, StudentQueryParams } from '@/types'
 import StudentDetailsModal from './StudentDetailsModal.vue'
+import StudentCreateDialog from './StudentCreateDialog.vue'
+import StudentDeleteDialog from './StudentDeleteDialog.vue'
 import { useAuthStore } from '@/stores/auth.store'
 
 export default defineComponent({
   name: 'StudentList',
   
   components: {
-    StudentDetailsModal
+    StudentDetailsModal,
+    StudentCreateDialog,
+    StudentDeleteDialog
   },
   
   setup() {
@@ -285,6 +302,10 @@ export default defineComponent({
       error: null as string | null,
       showDetailsModal: false,
       selectedStudentId: null as string | null,
+      showCreateDialog: false,
+      showDeleteDialog: false,
+      studentToEdit: null as Student | null,
+      studentToDelete: null as Student | null,
       searchQuery: '',
       searchTimeout: null as NodeJS.Timeout | null,
       sortBy: [{ key: 'name', order: 'asc' }],
@@ -411,15 +432,33 @@ export default defineComponent({
     },
 
     handleCreateStudent() {
-      console.log('Create student clicked')
+      this.studentToEdit = null
+      this.showCreateDialog = true
     },
 
     handleEditStudent(student: Student) {
-      console.log('Edit student:', student.id)
+      this.studentToEdit = student
+      this.showCreateDialog = true
     },
 
     handleDeleteStudent(student: Student) {
-      console.log('Delete student:', student.id)
+      this.studentToDelete = student
+      this.showDeleteDialog = true
+    },
+
+    async handleStudentCreated(student: Student) {
+      console.log('Student created:', student)
+      await this.fetchStudents()
+    },
+
+    async handleStudentUpdated(student: Student) {
+      console.log('Student updated:', student)
+      await this.fetchStudents()
+    },
+
+    async handleStudentDeleted(student: Student) {
+      console.log('Student deleted:', student)
+      await this.fetchStudents()
     },
 
     handleViewStudent(student: Student) {

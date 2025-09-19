@@ -77,12 +77,13 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  const initializeAuth = (): void => {
+  const initializeAuth = async (): Promise<void> => {
     authService.initializeAuth()
     
     const storedToken = authService.getToken()
     if (storedToken) {
       token.value = storedToken
+      await checkAuth()
     }
   }
 
