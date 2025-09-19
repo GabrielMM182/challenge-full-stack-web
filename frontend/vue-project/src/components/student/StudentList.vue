@@ -15,17 +15,27 @@
       </v-col>
     </v-row>
 
-    <v-row class="mb-4">
+    <v-row class="mb-4" align="end">
       <v-col cols="12" md="6">
         <v-text-field
           v-model="searchQuery"
-          label="Buscar por nome ou email"
+          label="Buscar por nome, email, RA ou CPF"
           prepend-inner-icon="mdi-magnify"
           variant="outlined"
           density="compact"
           clearable
           @input="handleSearch"
           @click:clear="clearSearch"
+        />
+      </v-col>
+      <v-col cols="12" md="3">
+        <v-select
+          v-model="pagination.limit"
+          :items="itemsPerPageOptions"
+          label="Itens por página"
+          variant="outlined"
+          density="compact"
+          @update:model-value="handleItemsPerPageChange"
         />
       </v-col>
     </v-row>
@@ -187,6 +197,25 @@
       </v-card>
     </div>
 
+    <v-row v-if="pagination.totalPages > 1" class="mt-4" justify="center">
+      <v-col cols="auto">
+        <v-pagination
+          v-model="pagination.page"
+          :length="pagination.totalPages"
+          :total-visible="isMobile ? 5 : 7"
+          @update:model-value="handlePageChange"
+        />
+      </v-col>
+    </v-row>
+
+    <v-row v-if="students.length > 0" class="mt-2" justify="center">
+      <v-col cols="auto">
+        <p class="text-body-2 text-grey">
+          Mostrando {{ getStartItem() }} - {{ getEndItem() }} de {{ pagination.total }} estudantes
+        </p>
+      </v-col>
+    </v-row>
+
     <!-- Student Details Modal -->
     <StudentDetailsModal
       v-model="showDetailsModal"
@@ -197,6 +226,7 @@
 </template>
 
 <script lang="ts">
+
 import { defineComponent } from 'vue'
 import { useDisplay } from 'vuetify'
 import { studentService } from '@/services'
@@ -225,6 +255,17 @@ export default defineComponent({
       searchQuery: '',
       searchTimeout: null as NodeJS.Timeout | null,
       sortBy: [{ key: 'name', order: 'asc' }],
+      pagination: {
+        page: 1,
+        limit: 10,
+        total: 0,
+        totalPages: 0
+      },
+      itemsPerPageOptions: [
+        { title: '5 por página', value: 5 },
+        { title: '10 por página', value: 10 },
+      ],
+
       tableHeaders: [
         {
           title: 'Nome',
@@ -271,7 +312,10 @@ export default defineComponent({
       this.error = null
       
       try {
-        const params: any = {}
+        const params: StudentQueryParams = {
+          page: this.pagination.page,
+          limit: this.pagination.limit
+        }
         
         if (this.searchQuery && this.searchQuery.trim()) {
           params.search = this.searchQuery.trim()
@@ -284,6 +328,7 @@ export default defineComponent({
         
         const response = await studentService.getStudents(params)
         this.students = response.data
+        this.pagination = response.pagination
       } catch (error) {
         console.error('Error fetching students:', error)
         this.error = error instanceof Error ? error.message : 'Erro ao carregar estudantes'
@@ -336,6 +381,7 @@ export default defineComponent({
       }
       
       this.searchTimeout = setTimeout(() => {
+        this.pagination.page = 1 
         this.fetchStudents()
       }, 500)
     },
@@ -345,11 +391,32 @@ export default defineComponent({
       if (this.searchTimeout) {
         clearTimeout(this.searchTimeout)
       }
+      this.pagination.page = 1 
       this.fetchStudents()
     },
 
     handleSortChange(sortBy: any) {
       this.sortBy = sortBy
+      this.pagination.page = 1 
+      this.fetchStudents()
+    },
+
+    handlePageChange(page: number) {
+      this.pagination.page = page
+      this.fetchStudents()
+    },
+
+    getStartItem(): number {
+      return (this.pagination.page - 1) * this.pagination.limit + 1
+    },
+
+    getEndItem(): number {
+      const end = this.pagination.page * this.pagination.limit
+      return Math.min(end, this.pagination.total)
+    },
+
+    handleItemsPerPageChange() {
+      this.pagination.page = 1
       this.fetchStudents()
     }
   }
@@ -400,5 +467,21 @@ export default defineComponent({
 
 :deep(.v-data-table-header--sorted .v-data-table-header__sort-icon) {
   opacity: 1 !important;
+}
+
+:deep(.v-pagination) {
+  justify-content: center;
+}
+
+:deep(.v-pagination__item) {
+  margin: 0 2px;
+}
+
+@media (max-width: 600px) {
+  :deep(.v-pagination__item) {
+    margin: 0 1px;
+    min-width: 32px;
+    height: 32px;
+  }
 }
 </style>
