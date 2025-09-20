@@ -204,8 +204,6 @@ export default defineComponent({
     },
 
     validateField(field: keyof FormData) {
-      const schema = this.isEditMode ? studentUpdateSchema : studentCreateSchema
-      
       try {
         if (this.isEditMode && (field === 'ra' || field === 'cpf')) {
           // Skip validation for readonly fields in edit mode
@@ -215,10 +213,22 @@ export default defineComponent({
 
         const fieldValue = this.formData[field]
         
-        if (field === 'name' || field === 'email') {
-          schema.pick({ [field]: true }).parse({ [field]: fieldValue })
-        } else if (!this.isEditMode) {
-          schema.pick({ [field]: true }).parse({ [field]: fieldValue })
+        if (this.isEditMode) {
+          if (field === 'name') {
+            studentUpdateSchema.pick({ name: true }).parse({ name: fieldValue })
+          } else if (field === 'email') {
+            studentUpdateSchema.pick({ email: true }).parse({ email: fieldValue })
+          }
+        } else {
+          if (field === 'name') {
+            studentCreateSchema.pick({ name: true }).parse({ name: fieldValue })
+          } else if (field === 'email') {
+            studentCreateSchema.pick({ email: true }).parse({ email: fieldValue })
+          } else if (field === 'ra') {
+            studentCreateSchema.pick({ ra: true }).parse({ ra: fieldValue })
+          } else if (field === 'cpf') {
+            studentCreateSchema.pick({ cpf: true }).parse({ cpf: fieldValue })
+          }
         }
         
         delete this.errors[field]

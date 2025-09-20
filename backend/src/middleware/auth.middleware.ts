@@ -14,7 +14,7 @@ export const authenticateToken = async (
     const token = extractTokenFromHeader(authHeader);
 
     if (!token) {
-      throw new AuthenticationError('No token provided');
+      throw new AuthenticationError('No token provided, login or registration required to edit user');
     }
 
     const decoded = await verifyToken(token);

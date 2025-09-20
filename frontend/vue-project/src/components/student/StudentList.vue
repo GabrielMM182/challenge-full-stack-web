@@ -117,9 +117,9 @@
         :sort-by="sortBy"
         class="elevation-0"
         item-key="id"
+        :show-select="false" 
         no-data-text="Nenhum estudante encontrado"
         loading-text="Carregando estudantes..."
-        show-select="false"
         hide-default-footer
         @update:sort-by="handleSortChange"
       >
@@ -270,6 +270,7 @@
 
 import { defineComponent } from 'vue'
 import { useDisplay } from 'vuetify'
+import { useRouter } from 'vue-router'
 import { studentService } from '@/services'
 import type { Student, StudentQueryParams } from '@/types'
 import StudentDetailsModal from './StudentDetailsModal.vue'
@@ -289,9 +290,11 @@ export default defineComponent({
   setup() {
     const { mobile } = useDisplay()
     const authStore = useAuthStore()
+    const router = useRouter()
     return { 
       isMobile: mobile,
-      authStore
+      authStore,
+      router
     }
   },
 
@@ -308,7 +311,7 @@ export default defineComponent({
       studentToDelete: null as Student | null,
       searchQuery: '',
       searchTimeout: null as NodeJS.Timeout | null,
-      sortBy: [{ key: 'name', order: 'asc' }],
+      sortBy: [{ key: 'name', order: 'asc' }] as any,
       pagination: {
         page: 1,
         limit: 10,
@@ -357,7 +360,7 @@ export default defineComponent({
   },
 
   computed: {
-    tableHeaders() {
+    tableHeaders(): any[] {
       const headers = [...this.baseTableHeaders]
       if (this.authStore.isAuthenticated) {
         headers.push(this.actionsHeader)
@@ -423,12 +426,12 @@ export default defineComponent({
     },
 
     handleLogin() {
-      this.$router.push('/login')
+      this.router.push('/login')
     },
 
     handleLogout() {
       this.authStore.logout()
-      this.$router.push('/login')
+      this.router.push('/login')
     },
 
     handleCreateStudent() {
