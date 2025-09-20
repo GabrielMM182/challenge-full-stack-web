@@ -145,7 +145,7 @@ async function main() {
       name: 'Diego Barbosa',
       email: 'diego.barbosa@student.com',
       ra: 'RA123466',
-      cpf: '11144477735',
+      cpf: '39264628096',
     },
   });
 
@@ -156,7 +156,7 @@ async function main() {
       name: 'Juliana Pereira',
       email: 'juliana.pereira@student.com',
       ra: 'RA123467',
-      cpf: '12255588846',
+      cpf: '40692767002',
     },
   });
 

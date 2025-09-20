@@ -187,7 +187,7 @@ src/
 - **Indicador Visual**: Chip mostrando termo pesquisado
 - **Limpeza Rápida**: Botão para limpar busca
 
-![filter](frontend/vue-project/src/assets/images/filterNameAndEmail.png)
+![filter](frontend/vue-project/src/assets/images/busca.png)
 
 #### Paginação e Ordenação
 - **Paginação**: Navegação entre páginas
@@ -196,6 +196,14 @@ src/
 - **Indicadores**: Setas de ordenação ativas/inativas
 
 ![pagination](frontend/vue-project/src/assets/images/pagination.png)
+
+
+
+![ordenacao](frontend/vue-project/src/assets/images/ordenacao.png)
+
+
+![ordenacao2](frontend/vue-project/src/assets/images/ordenacao2.png)
+
 
 #### Responsividade
 - **Desktop**: Tabela completa com todas as colunas
