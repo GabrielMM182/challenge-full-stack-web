@@ -141,7 +141,6 @@ src/
 ## Banco de Dados
 
 ### Modelo de Dados
-- **Users**: Usuários do sistema com roles (ADMIN, SUPER_ADMIN)
 - **Students**: Estudantes com dados únicos (email, RA, CPF)
 - **StudentUser**: Tabela de auditoria para rastrear ações
 
