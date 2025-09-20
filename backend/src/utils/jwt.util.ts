@@ -4,7 +4,7 @@ import { JWTPayload } from '../types/auth.types';
 
 dotenv.config();
 
-const JWT_SECRET = process.env['JWT_SECRET'];
+const JWT_SECRET = process.env['JWT_SECRET'] || 'bwbgwgb89wbg9wbg9wbg99w';
 
 if (!JWT_SECRET) {
   throw new Error('JWT_SECRET environment variable is required');

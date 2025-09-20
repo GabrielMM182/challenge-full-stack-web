@@ -363,19 +363,19 @@ export default defineComponent({
         {
           title: 'Email',
           key: 'email',
-          sortable: true,
+          sortable: false,
           width: '30%'
         },
         {
           title: 'RA',
           key: 'ra',
-          sortable: true,
+          sortable: false,
           width: '15%'
         },
         {
           title: 'CPF',
           key: 'cpf',
-          sortable: true,
+          sortable: false,
           width: '15%'
         }
       ],

@@ -273,4 +273,57 @@ src/
 - **Formatação Regional**: Datas, números e moedas por região
 - **RTL Support**: Suporte a idiomas da direita para esquerda
 
+## Como rodar o projeto
+
+### Pré-requisitos
+Certifique-se de ter as seguintes ferramentas instaladas:
+
+- **Node.js** (versão 18 ou superior)
+- **npm** (gerenciador de pacotes do Node.js)
+- **Backend API** rodando (veja COMMENTS_BACKEND.md)
+
+### Passos para execução
+
+1. **Instale as Dependências**
+   ```bash
+   npm install
+   ```
+
+2. **Configure as Variáveis de Ambiente**
+   ```bash
+   cp .env.example .env
+   ```
+   Edite o arquivo `.env` com suas configurações específicas:
+   ```env
+   VITE_API_BASE_URL=http://localhost:3000/api
+   ```
+
+3. **Inicie a Aplicação em Modo de Desenvolvimento**
+   Este comando inicia o servidor de desenvolvimento com hot-reload.
+   ```bash
+   npm run dev
+   ```
+
+4. **Acesse a Aplicação**
+   A aplicação estará disponível em: `http://localhost:5173`
+
+Após seguir os passos acima:
+- **Frontend**: `http://localhost:5173`
+- **API Backend**: `http://localhost:3000/api`
+
+### Funcionalidades Disponíveis
+
+#### Usuários Não Autenticados
+- Visualizar lista de estudantes
+- Buscar e filtrar estudantes
+- Ver detalhes dos estudantes
+- Acessar páginas de login e registro
+
+#### Usuários Autenticados
+- Todas as funcionalidades acima
+- Cadastrar novos estudantes
+- Editar estudantes existentes
+- Excluir estudantes
+- Gerenciar perfil de usuário
+
 **Nota**: A aplicação atual já atende muito bem aos requisitos propostos, com uma interface moderna, responsiva e funcional. As melhorias sugeridas são incrementais e podem ser implementadas conforme a necessidade e prioridade do projeto e não se tornando um overkill.

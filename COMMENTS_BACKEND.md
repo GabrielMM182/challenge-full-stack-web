@@ -34,6 +34,70 @@ src/
 └── errors/          # Classes de erro customizadas
 ```
 
+## Como rodar o projeto
+
+### Pré-requisitos
+Certifique-se de ter as seguintes ferramentas instaladas:
+
+- **Node.js** (versão 18 ou superior)
+- **npm** (gerenciador de pacotes do Node.js)
+- **Docker** e **Docker Compose**
+
+### Passos para execução
+
+1. **Instale as Dependências**
+   ```bash
+   npm install
+   ```
+
+2. **Configure as Variáveis de Ambiente e crie o seu arquivo proprio .env (.env.example)**
+   ```env
+    DATABASE_URL="postgresql://username:password@localhost:5432/student_management"
+    DATABASE_URL_TEST="postgresql://username:password@localhost:5432/student_management_test"
+
+    JWT_SECRET="bwbgwgb89wbg9wbg9wbg99w"
+    JWT_EXPIRES_IN="24h"
+
+    PORT=3000
+    NODE_ENV="development"
+
+    RATE_LIMIT_WINDOW_MS=900000
+    RATE_LIMIT_MAX_REQUESTS=5
+
+    BCRYPT_ROUNDS=12
+   ```
+   Edite o arquivo `.env` com suas configurações específicas ou copie igual ao .env.exemple.
+
+3. **Inicie o Banco de Dados com Docker Compose**
+   Este comando irá criar e iniciar o contêiner do PostgreSQL em segundo plano.
+   ```bash
+   npm run docker:up -d
+   ```
+
+4. **Execute as Migrações do Prisma**
+   As migrações irão criar a estrutura das tabelas no banco de dados.
+   ```bash
+   npm run prisma:migrate
+   ```
+
+5. **Popule o Banco de Dados**
+   Este passo irá adicionar alguns dados de exemplo ao banco de dados para testes.
+   ```bash
+   npm run prisma:seed
+   ```
+
+6. **Inicie a AAPI**
+   Este comando inicia o servidor da API.
+   ```bash
+   npm run dev
+   ```
+### Verificação da Instalação
+
+Após seguir os passos acima, a API estará disponível em:
+- **URL**: `http://localhost:3000/API`
+- **Health Check**: `GET http://localhost:3000/api/health`
+
+
 ## Lista de Bibliotecas de Terceiros Utilizadas
 
 ### Dependências de Produção
