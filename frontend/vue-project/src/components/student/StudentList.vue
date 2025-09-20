@@ -1,6 +1,5 @@
 <template>
   <div class="student-list-container">
-    <!-- Header Section -->
     <v-card class="header-card mb-6" elevation="0" color="transparent">
       <v-card-text class="pa-6">
         <v-row align="center" justify="space-between">
@@ -49,7 +48,6 @@
       </v-card-text>
     </v-card>
 
-    <!-- Search and Filters Section -->
     <v-card class="search-card mb-4" elevation="1">
       <v-card-text class="pa-4">
         <v-row align="end" no-gutters>
@@ -65,7 +63,6 @@
         </v-row>
       </v-card-text>
     </v-card>
-    <!-- Loading State -->
     <v-card v-if="isLoading" class="loading-card pa-8" elevation="1">
       <v-row justify="center" align="center">
         <v-col cols="auto" class="text-center">
@@ -76,7 +73,6 @@
         </v-col>
       </v-row>
     </v-card>
-    <!-- Error State -->
     <v-card v-else-if="error" class="error-card mb-4" elevation="1">
       <v-alert type="error" variant="tonal" prominent closable @click:close="clearError">
         <template #title>
@@ -85,7 +81,6 @@
         {{ error }}
       </v-alert>
     </v-card>
-    <!-- Empty State -->
     <v-card v-else-if="students.length === 0" class="empty-state-card pa-12 text-center" elevation="1">
       <div class="empty-state-content">
         <v-avatar size="120" color="grey-lighten-4" class="mb-6">
@@ -119,7 +114,6 @@
         </div>
       </div>
     </v-card>
-    <!-- Desktop Table View -->
     <v-card v-else-if="!isMobile" class="data-table-card" elevation="1">
       <v-card-title class="pa-4 bg-grey-lighten-5">
         <v-row align="center" justify="space-between">
@@ -189,7 +183,6 @@
       </v-data-table>
     </v-card>
 
-    <!-- Mobile Cards View -->
     <div v-else class="mobile-cards">
       <div class="mobile-header mb-4">
         <v-row align="center" justify="space-between">
@@ -276,7 +269,6 @@
       </v-card>
     </div>
 
-    <!-- Pagination Section -->
     <v-card v-if="students.length > 0" class="pagination-card mt-6" elevation="0" color="transparent">
       <v-card-text class="pa-4">
         <v-row align="center" justify="space-between">
