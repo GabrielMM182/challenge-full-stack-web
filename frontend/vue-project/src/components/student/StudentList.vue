@@ -139,7 +139,7 @@
           </div>
         </template>
         <template #item.cpf="{ item }">
-          <span class="text-mono">{{ formatCpf(item.cpf) }}</span>
+          <span class="text-mono">{{ maskCpfForSecurity(item.cpf) }}</span>
         </template>
         <template v-if="authStore.isAuthenticated" #item.actions="{ item }">
           <div class="d-flex gap-2">
@@ -219,7 +219,7 @@
             </v-col>
             <v-col cols="6">
               <div class="text-caption text-grey">CPF</div>
-              <div class="text-body-2 text-mono">{{ formatCpf(student.cpf) }}</div>
+              <div class="text-body-2 text-mono">{{ maskCpfForSecurity(student.cpf) }}</div>
             </v-col>
           </v-row>
         </v-card-text>
@@ -277,6 +277,7 @@ import StudentDetailsModal from './StudentDetailsModal.vue'
 import StudentCreateDialog from './StudentCreateDialog.vue'
 import StudentDeleteDialog from './StudentDeleteDialog.vue'
 import { useAuthStore } from '@/stores/auth.store'
+import { maskCpfForSecurity } from '@/utils/cpf.utils'
 
 export default defineComponent({
   name: 'StudentList',
@@ -413,13 +414,7 @@ export default defineComponent({
         .toUpperCase()
     },
 
-    formatCpf(cpf: string): string {
-      const cleanCpf = cpf.replace(/\D/g, '')
-            if (cleanCpf.length === 11) {
-        return cleanCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
-      }
-      return cpf 
-    },
+    maskCpfForSecurity,
 
     clearError() {
       this.error = null

@@ -94,7 +94,7 @@
               <v-col cols="12" md="6">
                 <div class="info-item">
                   <label class="info-label">CPF</label>
-                  <p class="info-value text-mono">{{ formatCpf(student.cpf) }}</p>
+                  <p class="info-value text-mono">{{ maskCpfForSecurity(student.cpf) }}</p>
                 </div>
               </v-col>
             </v-row>
@@ -156,6 +156,7 @@
 import { defineComponent, type PropType } from 'vue'
 import { studentService } from '@/services'
 import type { Student } from '@/types'
+import { maskCpfForSecurity } from '@/utils/cpf.utils'
 
 export default defineComponent({
   name: 'StudentDetailsModal',
@@ -245,15 +246,7 @@ export default defineComponent({
         .toUpperCase()
     },
 
-    formatCpf(cpf: string): string {
-      const cleanCpf = cpf.replace(/\D/g, '')
-      
-      if (cleanCpf.length === 11) {
-        return cleanCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
-      }
-      
-      return cpf
-    },
+    maskCpfForSecurity,
 
     formatDate(dateString: string): string {
       try {
@@ -281,7 +274,7 @@ export default defineComponent({
 .info-label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: rgb(var(--v-theme-on-surface-variant));
+  color: black;
   margin-bottom: 4px;
   display: block;
 }

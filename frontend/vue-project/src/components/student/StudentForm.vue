@@ -106,6 +106,7 @@ import { defineComponent, type PropType } from 'vue'
 import type { Student } from '@/types'
 import { studentCreateSchema, studentUpdateSchema } from '@/validation'
 import type { StudentCreateInput, StudentUpdateInput } from '@/validation'
+import { formatCpf, cleanCpf } from '@/utils/cpf.utils'
 
 interface FormData {
   name: string
@@ -193,14 +194,7 @@ export default defineComponent({
     },
 
     formatCpfInput() {
-      let value = this.formData.cpf.replace(/\D/g, '')
-      
-      if (value.length <= 11) {
-        value = value.replace(/(\d{3})(\d)/, '$1.$2')
-        value = value.replace(/(\d{3})(\d)/, '$1.$2')
-        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2')
-        this.formData.cpf = value
-      }
+      this.formData.cpf = formatCpf(this.formData.cpf)
     },
 
     validateField(field: keyof FormData) {
@@ -290,7 +284,7 @@ export default defineComponent({
           name: this.formData.name.trim(),
           email: this.formData.email.trim(),
           ra: this.formData.ra.trim(),
-          cpf: this.formData.cpf.replace(/\D/g, '') // Remove formatting for API
+          cpf: cleanCpf(this.formData.cpf) // Remove formatting for API
         }
         this.$emit('submit', createData)
       }
